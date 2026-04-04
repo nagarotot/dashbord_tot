@@ -1,0 +1,43 @@
+/* Overrides for react-big-calendar to match our warm theme and dark mode */
+.rbc-calendar {
+  direction: rtl;
+  font-family: inherit;
+}
+.rbc-toolbar button {
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 8px !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+}
+.rbc-toolbar button.rbc-active {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  border-color: var(--primary) !important;
+}
+.rbc-toolbar button:hover {
+  background-color: var(--accent) !important;
+}
+.rbc-month-view, .rbc-time-view, .rbc-agenda-view {
+  border-radius: 12px;
+  overflow: hidden;
+  border-color: var(--border) !important;
+  background-color: var(--background) !important;
+}
+.rbc-header {
+  border-bottom: 1px solid var(--border) !important;
+  padding: 8px 0;
+  font-weight: 700;
+}
+.rbc-day-bg {
+  border-left: 1px solid var(--border) !important;
+}
+.rbc-month-row {
+  border-top: 1px solid var(--border) !important;
+}
+.rbc-today {
+  background-color: var(--accent) !important;
+}
+.rbc-event {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
