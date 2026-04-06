@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { PomodoroTimer } from "@/components/pomodoro-timer"
+import { DuckBuddy } from "@/components/duck-buddy"
 
 export default function DashboardLayout({
   children,
@@ -16,6 +17,7 @@ export default function DashboardLayout({
           <div className="flex flex-1 rounded-xl bg-background border p-3 sm:p-4 shadow-sm w-full relative overflow-y-auto overflow-x-hidden">
             {children}
             <PomodoroTimer />
+            <DuckBuddy />
           </div>
         </main>
       </div>

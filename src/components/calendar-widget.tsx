@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useData } from "@/lib/data-context"
+import { useEffect } from "react"
 
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar'
 import { format, parse, startOfWeek, getDay } from 'date-fns'
@@ -105,6 +106,30 @@ export function CalendarWidget() {
     setRecurrence("none")
     setIsDialogOpen(false)
   }
+
+  // Handle mobile drop via custom event
+  useEffect(() => {
+    const handleTouchDrop: EventListener = (e) => {
+      const customEvent = e as CustomEvent;
+      const taskObj = customEvent.detail?.task;
+      
+      if (taskObj) {
+         setTitle(taskObj.title)
+         setTopic("משימות כלליות")
+         setColor(taskObj.color)
+         setDroppingTaskId(taskObj.id)
+         const now = new Date()
+         const d = now.toISOString().split("T")[0]
+         setDate(d); setEndDate(d)
+         setStartTime(now.toLocaleTimeString("he-IL", { hour: '2-digit', minute: '2-digit' }))
+         setIsDialogOpen(true)
+      }
+    }
+    
+    // Attach listener to window so it catches the dispatched event bubbling up
+    window.addEventListener('tot:dropFromTouch', handleTouchDrop);
+    return () => window.removeEventListener('tot:dropFromTouch', handleTouchDrop);
+  }, [events]);
 
   // Convert custom events to react-big-calendar format
   const mappedEvents = useMemo(() => {

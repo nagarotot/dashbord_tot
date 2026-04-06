@@ -36,9 +36,12 @@ interface DataContextType {
   updateTask: (id: string, updates: Partial<Task>) => void;
   reorderTasks: (draggedId: string, targetId: string) => void;
   
-  sysSettings: { username: string; allowNotifications: boolean; themeColor: string; cursorStyle: string; viewMode: 'desktop' | 'mobile'; ringtone: string };
-  updateSettings: (settings: Partial<{username: string, allowNotifications: boolean, themeColor: string, cursorStyle: string, viewMode: 'desktop' | 'mobile', ringtone: string}>) => void;
+  sysSettings: { username: string; allowNotifications: boolean; themeColor: string; cursorStyle: string; viewMode: 'desktop' | 'mobile'; ringtone: string; duckMode: boolean };
+  updateSettings: (settings: Partial<{username: string, allowNotifications: boolean, themeColor: string, cursorStyle: string, viewMode: 'desktop' | 'mobile', ringtone: string, duckMode: boolean}>) => void;
   
+  activeDraggedTask: Task | null;
+  setActiveDraggedTask: React.Dispatch<React.SetStateAction<Task | null>>;
+
   isLoaded: boolean;
 }
 
@@ -47,7 +50,8 @@ const defaultContext: DataContextType = {
   notes: [], addNote: () => {}, deleteNote: () => {}, updateNote: () => {},
   events: [], addEvent: () => {}, deleteEvent: () => {}, updateEvent: () => {},
   tasks: [], addTask: () => {}, deleteTask: () => {}, updateTask: () => {}, reorderTasks: () => {},
-  sysSettings: { username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop', ringtone: "magic" }, updateSettings: () => {},
+  sysSettings: { username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop', ringtone: "magic", duckMode: true }, updateSettings: () => {},
+  activeDraggedTask: null, setActiveDraggedTask: () => {},
   isLoaded: false
 }
 
@@ -65,7 +69,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [notes, setNotes] = useState<Note[]>([])
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
-  const [sysSettings, setSysSettings] = useState({ username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop' as 'desktop' | 'mobile', ringtone: "magic" })
+  const [activeDraggedTask, setActiveDraggedTask] = useState<Task | null>(null)
+  const [sysSettings, setSysSettings] = useState({ username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop' as 'desktop' | 'mobile', ringtone: "magic", duckMode: true })
 
   // Theme, Cursor, and View Mode Applier Effect
   useEffect(() => {
@@ -164,6 +169,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       events, addEvent, deleteEvent, updateEvent,
       tasks, addTask, deleteTask, updateTask, reorderTasks,
       sysSettings, updateSettings,
+      activeDraggedTask, setActiveDraggedTask,
       isLoaded
     }}>
       {children}

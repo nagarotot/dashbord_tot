@@ -10,6 +10,7 @@ export default function SettingsPage() {
   
   const [localUsername, setLocalUsername] = useState("")
   const [localNotifications, setLocalNotifications] = useState(true)
+  const [localDuckMode, setLocalDuckMode] = useState(true)
   const [successMsg, setSuccessMsg] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
 
@@ -29,13 +30,14 @@ export default function SettingsPage() {
     if (isLoaded) {
       setLocalUsername(sysSettings.username || "")
       setLocalNotifications(sysSettings.allowNotifications !== false)
+      setLocalDuckMode(sysSettings.duckMode !== false)
     }
   }, [sysSettings, isLoaded])
 
   if (!isLoaded) return null
 
   const handleSaveGeneral = () => {
-    updateSettings({ username: localUsername, allowNotifications: localNotifications })
+    updateSettings({ username: localUsername, allowNotifications: localNotifications, duckMode: localDuckMode })
     setSuccessMsg(true)
     setTimeout(() => setSuccessMsg(false), 3000)
   }
@@ -74,6 +76,17 @@ export default function SettingsPage() {
              </div>
              <label className="relative inline-flex items-center cursor-pointer">
                <input type="checkbox" className="sr-only peer" checked={localNotifications} onChange={(e) => setLocalNotifications(e.target.checked)} />
+               <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+             </label>
+           </div>
+
+           <div className="flex items-center justify-between border-t border-border/50 pt-4">
+             <div>
+               <h4 className="font-semibold text-sm">ברווז המזל המנחה 🦆</h4>
+               <p className="text-sm text-muted-foreground mt-1">אפשר לברווז הלימוד להופיע מדי פעם כדי לעודד אותך.</p>
+             </div>
+             <label className="relative inline-flex items-center cursor-pointer">
+               <input type="checkbox" className="sr-only peer" checked={localDuckMode} onChange={(e) => setLocalDuckMode(e.target.checked)} />
                <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
              </label>
            </div>

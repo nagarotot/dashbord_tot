@@ -1,17 +1,14 @@
 "use client"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useData } from "@/lib/data-context"
 import { FileUp, BookOpenText } from "lucide-react"
 
 export function FastFileDropzone() {
   const { addNote, courses } = useData()
   const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    const files = e.dataTransfer.files
-    
+  const processFiles = (files: FileList | null) => {
     if (files && files.length > 0) {
       const file = files[0]
       const courseId = courses.length > 0 ? courses[0].id : ""
@@ -36,15 +33,36 @@ export function FastFileDropzone() {
     }
   }
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    processFiles(e.dataTransfer.files)
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    processFiles(e.target.files)
+    if (fileInputRef.current) {
+        fileInputRef.current.value = "" // Reset input
+    }
+  }
+
   return (
     <div 
+      onClick={() => fileInputRef.current?.click()}
       onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
-      className={`relative w-full h-40 md:h-64 rounded-3xl border-2 border-dashed transition-all flex flex-col items-center justify-center p-6 text-center ${
+      className={`relative w-full h-40 md:h-64 rounded-3xl border-2 border-dashed transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer overflow-hidden ${
         isDragging ? 'border-primary bg-primary/10 scale-[1.02]' : 'border-border/60 bg-card hover:bg-accent/50'
       }`}
     >
+      <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+      />
       <div className={`p-4 rounded-full mb-3 transition-colors ${isDragging ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
         <FileUp className="w-8 h-8" />
       </div>

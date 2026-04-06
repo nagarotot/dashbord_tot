@@ -4,12 +4,12 @@ import { Plus, GripVertical, Trash2, Circle, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useData } from "@/lib/data-context"
+import { useData, Task } from "@/lib/data-context"
 
 import { useRouter } from "next/navigation"
 
 export function TaskBoard() {
-  const { tasks, addTask, updateTask, deleteTask, events, courses, reorderTasks } = useData()
+  const { tasks, addTask, updateTask, deleteTask, events, courses, reorderTasks, setActiveDraggedTask } = useData()
   const router = useRouter()
   const [newTaskTitle, setNewTaskTitle] = useState("")
   const [selectedColor, setSelectedColor] = useState("bg-blue-500")
@@ -17,6 +17,10 @@ export function TaskBoard() {
 
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
   const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null)
+  
+  // Mobile dragging state
+  const [touchDragTask, setTouchDragTask] = useState<Task | null>(null)
+  const [touchPos, setTouchPos] = useState({ x: 0, y: 0 })
 
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState("")
@@ -195,16 +199,42 @@ export function TaskBoard() {
                 if (incomingId && incomingId !== task.id) {
                     reorderTasks(incomingId, task.id)
                 }
-                setDraggedTaskId(null)
-                setDragOverTaskId(null)
+                 setDraggedTaskId(null)
+                 setDragOverTaskId(null)
              }}
+             // Touch implementation for mobile dnd
+             onTouchStart={(e) => {
+               // Prevent default happens in touch end to allow click edit, but we want to prep drag
+               const touch = e.touches[0]
+               setTouchPos({ x: touch.clientX, y: touch.clientY })
+               
+               // Small delay to distinct between tap and drag
+               const timer = setTimeout(() => {
+                  setTouchDragTask(task)
+                  setActiveDraggedTask(task)
+               }, 300)
+               
+               // Make sure to clear on end/move too aggressively if it was just a tap
+               const clearTouch = () => { clearTimeout(timer); document.removeEventListener('touchend', clearTouch) }
+               document.addEventListener('touchend', clearTouch)
+             }}
+             // The move handler must be on document dynamically or on the board
              className={`group flex items-center gap-3 p-3 rounded-xl border shadow-sm cursor-grab active:cursor-grabbing transition-all ${draggedTaskId === task.id ? 'opacity-30 scale-95' : 'bg-background'} ${dragOverTaskId === task.id ? 'border-primary border-dashed bg-primary/5 -translate-y-1' : 'border-border hover:border-primary/40'}`}
            >
               <div className="cursor-grab text-muted-foreground/50 hover:text-foreground">
                  <GripVertical className="w-4 h-4" />
               </div>
               <div className={`w-3 h-3 rounded-full ${task.color} shrink-0`} />
-              <span onClick={() => openEdit(task)} className="font-medium text-sm flex-1 cursor-pointer hover:text-primary transition-colors">{task.title}</span>
+              <div className="flex flex-col flex-1 min-w-0">
+                 <div className="flex items-center gap-2">
+                    <span onClick={() => openEdit(task)} className="font-medium text-sm cursor-pointer hover:text-primary transition-colors truncate">{task.title}</span>
+                    {task.courseId && (
+                       <span className="text-[10px] text-muted-foreground font-medium shrink-0">
+                          • {courses.find(c => c.id === task.courseId)?.name || 'קורס'}
+                       </span>
+                    )}
+                 </div>
+              </div>
               <button 
                  onClick={() => deleteTask(task.id)}
                  className="opacity-20 hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive p-1 rounded-md"
@@ -221,6 +251,42 @@ export function TaskBoard() {
            </div>
         )}
       </div>
+
+      {/* Ghost Element for Mobile Touch Dragging */}
+      {touchDragTask && (
+        <div 
+          className="fixed z-[99999] pointer-events-none opacity-80 flex items-center gap-3 p-3 rounded-xl border-dashed border-2 border-primary bg-background shadow-2xl scale-105"
+          style={{ left: touchPos.x - 100, top: touchPos.y - 30, width: 250 }}
+        >
+          <div className={`w-3 h-3 rounded-full ${touchDragTask.color} shrink-0`} />
+          <span className="font-bold">{touchDragTask.title}</span>
+        </div>
+      )}
+
+      {/* Touch Move/End Listeners on the board itself (could also be global) */}
+      {touchDragTask && (
+        <div 
+          className="fixed inset-0 z-[99998] touch-none"
+          onTouchMove={(e) => {
+             const touch = e.touches[0]
+             setTouchPos({ x: touch.clientX, y: touch.clientY })
+          }}
+          onTouchEnd={(e) => {
+             // In TouchEnd, we check what element we are over using document.elementFromPoint
+             const changedTouch = e.changedTouches[0]
+             const elemBelow = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY)
+             
+             // If element is inside the calendar, it will trigger the custom event there
+             if (elemBelow) {
+                 const customEvent = new CustomEvent('tot:dropFromTouch', { detail: { task: touchDragTask } })
+                 elemBelow.dispatchEvent(customEvent)
+             }
+             
+             setTouchDragTask(null)
+             setActiveDraggedTask(null)
+          }}
+        />
+      )}
 
       <div className="mt-4 pt-4 border-t">
          <h3 className="font-bold flex items-center gap-2 mb-3">
