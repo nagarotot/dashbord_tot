@@ -19,21 +19,21 @@ export default function DashboardPage() {
   const selectedNote = notes.find(n => n.id === selectedNoteId)
 
   return (
-    <div className="flex flex-col animate-in fade-in zoom-in-95 duration-500 w-full h-full p-2 max-w-7xl mx-auto">
+    <div className="flex flex-col animate-in fade-in zoom-in-95 duration-500 w-full h-full p-0 sm:p-2 max-w-7xl mx-auto">
       <LiveHeader />
       
-      <div className="grid gap-6 sm:grid-cols-3 mb-6">
-        <div className="bg-card text-card-foreground border shadow-sm p-8 rounded-3xl flex flex-col justify-between">
-          <h3 className="font-bold text-base text-muted-foreground mb-2">סה"כ קורסים פעילים</h3>
-          <p className="text-5xl font-extrabold text-primary">{totalCourses}</p>
+      <div className="grid gap-3 grid-cols-3 mb-4 sm:mb-6">
+        <div className="bg-card text-card-foreground border shadow-sm p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between">
+          <h3 className="font-bold text-xs sm:text-base text-muted-foreground mb-1 sm:mb-2">קורסים פעילים</h3>
+          <p className="text-3xl sm:text-5xl font-extrabold text-primary">{totalCourses}</p>
         </div>
-        <div className="bg-card text-card-foreground border shadow-sm p-8 rounded-3xl flex flex-col justify-between">
-          <h3 className="font-bold text-base text-muted-foreground mb-2">סיכומים העונה</h3>
-          <p className="text-5xl font-extrabold text-primary">{totalNotes}</p>
+        <div className="bg-card text-card-foreground border shadow-sm p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between">
+          <h3 className="font-bold text-xs sm:text-base text-muted-foreground mb-1 sm:mb-2">סיכומים</h3>
+          <p className="text-3xl sm:text-5xl font-extrabold text-primary">{totalNotes}</p>
         </div>
-        <div className="bg-card text-card-foreground border shadow-sm p-8 rounded-3xl flex flex-col justify-between">
-          <h3 className="font-bold text-base text-muted-foreground mb-2">קבצים מצורפים נבדקו</h3>
-          <p className="text-5xl font-extrabold text-primary">{totalAttachments}</p>
+        <div className="bg-card text-card-foreground border shadow-sm p-4 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col justify-between">
+          <h3 className="font-bold text-xs sm:text-base text-muted-foreground mb-1 sm:mb-2">קבצים</h3>
+          <p className="text-3xl sm:text-5xl font-extrabold text-primary">{totalAttachments}</p>
         </div>
       </div>
 
@@ -97,8 +97,8 @@ export default function DashboardPage() {
       <FastFileDropzone />
 
       {/* Recent Notes Snippet */}
-      <div className="bg-card rounded-3xl border shadow-sm p-8 mt-6 flex flex-col gap-4">
-         <h3 className="font-bold text-xl">סיכומים שנוצרו לאחרונה</h3>
+      <div className="bg-card rounded-2xl sm:rounded-3xl border shadow-sm p-4 sm:p-8 mt-4 sm:mt-6 flex flex-col gap-3 sm:gap-4">
+         <h3 className="font-bold text-lg sm:text-xl">סיכומים שנוצרו לאחרונה</h3>
          {notes.length === 0 ? (
             <div className="h-32 flex items-center justify-center border-2 border-dashed border-border/50 rounded-2xl bg-muted/20">
                <p className="text-muted-foreground font-medium text-lg">עוד לא הוספת סיכומים למערכת.</p>

@@ -5,11 +5,11 @@ export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
-  
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http') 
-    ? process.env.NEXT_PUBLIC_SUPABASE_URL 
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http')
+    ? process.env.NEXT_PUBLIC_SUPABASE_URL
     : 'https://dummy.supabase.co';
-    
+
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy_key';
 
   const supabase = createServerClient(

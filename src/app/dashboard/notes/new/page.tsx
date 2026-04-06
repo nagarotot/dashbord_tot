@@ -28,7 +28,7 @@ export default function NewNotePage() {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-5xl mx-auto py-8 gap-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="flex flex-col w-full max-w-5xl mx-auto py-4 sm:py-8 gap-4 sm:gap-8 animate-in fade-in zoom-in-95 duration-500">
       
       {/* Header Actions */}
       <div className="flex items-center justify-between">
@@ -43,7 +43,7 @@ export default function NewNotePage() {
       </div>
 
       {/* Editor Main Area */}
-      <div className="flex flex-col gap-6 bg-card/80 backdrop-blur-sm border shadow-xl rounded-3xl p-8 md:p-12 relative overflow-hidden">
+      <div className="flex flex-col gap-4 sm:gap-6 bg-card/80 backdrop-blur-sm border shadow-xl rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-12 relative overflow-hidden">
         
         {/* Subtle decorative glow */}
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-primary/10 blur-3xl rounded-full pointer-events-none" />
@@ -54,7 +54,7 @@ export default function NewNotePage() {
             placeholder="כותרת הסיכום (לדוגמה: מבוא למיקרוכלכלה - שיעור 1)..." 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-3xl md:text-5xl font-extrabold border-none shadow-none h-auto px-0 focus-visible:ring-0 placeholder:text-muted-foreground/30 bg-transparent text-foreground tracking-tight"
+            className="text-2xl sm:text-3xl md:text-5xl font-extrabold border-none shadow-none h-auto px-0 focus-visible:ring-0 placeholder:text-muted-foreground/30 bg-transparent text-foreground tracking-tight"
           />
           <div className="flex gap-2 items-center">
             <span className="text-sm font-medium text-muted-foreground">שיוך לקורס:</span>
@@ -70,7 +70,7 @@ export default function NewNotePage() {
         </div>
 
         {/* Tiptap / Markdown Editor Placeholder */}
-        <div className="min-h-[400px] border-y border-border/50 py-8 relative z-10">
+        <div className="min-h-[200px] sm:min-h-[400px] border-y border-border/50 py-6 sm:py-8 relative z-10">
           <p className="text-muted-foreground/60 italic font-medium text-lg">
             כאן יופיע עורך התוכן העשיר שלנו בקרוב (ניתן יהיה לכתוב כותרות, טקסט מודגש, רשימות וכו')... תתחיל להקליד!
           </p>

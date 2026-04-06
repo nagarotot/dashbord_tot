@@ -13,11 +13,11 @@ export default function AllNotesPage() {
   const selectedNote = notes.find(n => n.id === selectedNoteId)
 
   return (
-    <div className="flex flex-col gap-6 w-full animate-in fade-in zoom-in-95 duration-500 p-4">
-      <div className="flex items-center justify-between border-b border-border/50 pb-6">
+    <div className="flex flex-col gap-4 sm:gap-6 w-full animate-in fade-in zoom-in-95 duration-500 p-1 sm:p-4">
+      <div className="flex items-center justify-between border-b border-border/50 pb-4 sm:pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">כל הסיכומים</h1>
-          <p className="text-muted-foreground mt-1 font-medium">כאן מרוכזים כל הסיכומים מכל הקורסים.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">כל הסיכומים</h1>
+          <p className="text-muted-foreground mt-1 font-medium text-sm sm:text-base">כאן מרוכזים כל הסיכומים מכל הקורסים.</p>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export default function AllNotesPage() {
          </DialogContent>
       </Dialog>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-2">
          {notes.map((note) => {
             const course = courses.find(c => c.id === note.courseId)
             return (
