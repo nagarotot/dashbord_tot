@@ -11,6 +11,7 @@ export default function SettingsPage() {
   const [localUsername, setLocalUsername] = useState("")
   const [localNotifications, setLocalNotifications] = useState(true)
   const [localDuckMode, setLocalDuckMode] = useState(true)
+  const [localDuckBehavior, setLocalDuckBehavior] = useState<'random' | 'always'>('random')
   const [successMsg, setSuccessMsg] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
 
@@ -31,13 +32,14 @@ export default function SettingsPage() {
       setLocalUsername(sysSettings.username || "")
       setLocalNotifications(sysSettings.allowNotifications !== false)
       setLocalDuckMode(sysSettings.duckMode !== false)
+      setLocalDuckBehavior(sysSettings.duckBehavior || 'random')
     }
   }, [sysSettings, isLoaded])
 
   if (!isLoaded) return null
 
   const handleSaveGeneral = () => {
-    updateSettings({ username: localUsername, allowNotifications: localNotifications, duckMode: localDuckMode })
+    updateSettings({ username: localUsername, allowNotifications: localNotifications, duckMode: localDuckMode, duckBehavior: localDuckBehavior })
     setSuccessMsg(true)
     setTimeout(() => setSuccessMsg(false), 3000)
   }
@@ -80,15 +82,31 @@ export default function SettingsPage() {
              </label>
            </div>
 
-           <div className="flex items-center justify-between border-t border-border/50 pt-4">
-             <div>
-               <h4 className="font-semibold text-sm">ברווז המזל המנחה 🦆</h4>
-               <p className="text-sm text-muted-foreground mt-1">אפשר לברווז הלימוד להופיע מדי פעם כדי לעודד אותך.</p>
+           <div className="flex flex-col gap-3 border-t border-border/50 pt-4">
+             <div className="flex items-center justify-between">
+               <div>
+                 <h4 className="font-semibold text-sm">ברווז המזל המנחה 🦆</h4>
+                 <p className="text-sm text-muted-foreground mt-1">אפשר לברווז הלימוד להופיע מדי פעם כדי לעודד אותך.</p>
+               </div>
+               <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                 <input type="checkbox" className="sr-only peer" checked={localDuckMode} onChange={(e) => setLocalDuckMode(e.target.checked)} />
+                 <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+               </label>
              </div>
-             <label className="relative inline-flex items-center cursor-pointer">
-               <input type="checkbox" className="sr-only peer" checked={localDuckMode} onChange={(e) => setLocalDuckMode(e.target.checked)} />
-               <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-             </label>
+
+             {localDuckMode && (
+               <div className="flex items-center justify-between bg-muted/30 p-2 rounded-lg mt-1">
+                 <label className="text-xs font-semibold text-muted-foreground">מתי להופיע?</label>
+                 <select 
+                   value={localDuckBehavior} 
+                   onChange={(e) => setLocalDuckBehavior(e.target.value as 'random' | 'always')}
+                   className="bg-background text-sm rounded border border-border/50 px-2 py-1 outline-none font-medium cursor-pointer"
+                 >
+                   <option value="random">מופיע באקראי (הפתעה!)</option>
+                   <option value="always">תמיד איתך על המסך</option>
+                 </select>
+               </div>
+             )}
            </div>
 
            <div className="flex items-center gap-4 mt-2">

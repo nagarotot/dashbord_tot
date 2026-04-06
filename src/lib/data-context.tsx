@@ -36,8 +36,8 @@ interface DataContextType {
   updateTask: (id: string, updates: Partial<Task>) => void;
   reorderTasks: (draggedId: string, targetId: string) => void;
   
-  sysSettings: { username: string; allowNotifications: boolean; themeColor: string; cursorStyle: string; viewMode: 'desktop' | 'mobile'; ringtone: string; duckMode: boolean };
-  updateSettings: (settings: Partial<{username: string, allowNotifications: boolean, themeColor: string, cursorStyle: string, viewMode: 'desktop' | 'mobile', ringtone: string, duckMode: boolean}>) => void;
+  sysSettings: { username: string; allowNotifications: boolean; themeColor: string; cursorStyle: string; viewMode: 'desktop' | 'mobile'; ringtone: string; duckMode: boolean; duckBehavior?: 'random' | 'always' };
+  updateSettings: (settings: Partial<{username: string, allowNotifications: boolean, themeColor: string, cursorStyle: string, viewMode: 'desktop' | 'mobile', ringtone: string, duckMode: boolean, duckBehavior: 'random' | 'always'}>) => void;
   
   activeDraggedTask: Task | null;
   setActiveDraggedTask: React.Dispatch<React.SetStateAction<Task | null>>;
@@ -50,7 +50,7 @@ const defaultContext: DataContextType = {
   notes: [], addNote: () => {}, deleteNote: () => {}, updateNote: () => {},
   events: [], addEvent: () => {}, deleteEvent: () => {}, updateEvent: () => {},
   tasks: [], addTask: () => {}, deleteTask: () => {}, updateTask: () => {}, reorderTasks: () => {},
-  sysSettings: { username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop', ringtone: "magic", duckMode: true }, updateSettings: () => {},
+  sysSettings: { username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop', ringtone: "magic", duckMode: true, duckBehavior: 'random' }, updateSettings: () => {},
   activeDraggedTask: null, setActiveDraggedTask: () => {},
   isLoaded: false
 }
@@ -70,7 +70,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
   const [activeDraggedTask, setActiveDraggedTask] = useState<Task | null>(null)
-  const [sysSettings, setSysSettings] = useState({ username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop' as 'desktop' | 'mobile', ringtone: "magic", duckMode: true })
+  const [sysSettings, setSysSettings] = useState({ username: "חנה", allowNotifications: true, themeColor: "mocha", cursorStyle: "strawberry", viewMode: 'desktop' as 'desktop' | 'mobile', ringtone: "magic", duckMode: true, duckBehavior: 'random' as 'random' | 'always' })
 
   // Theme, Cursor, and View Mode Applier Effect
   useEffect(() => {

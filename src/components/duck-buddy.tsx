@@ -13,7 +13,7 @@ export function DuckBuddy() {
   const duckRef = useRef<HTMLDivElement>(null)
   const requestRef = useRef<number>(null)
 
-  // Random appearance logic
+  // Appearance logic
   useEffect(() => {
     if (!sysSettings.duckMode) {
       setIsVisible(false)
@@ -35,7 +35,12 @@ export function DuckBuddy() {
       }
     }
 
-    // Check every 30-90 seconds
+    if (sysSettings.duckBehavior === 'always') {
+      triggerDuck()
+      return
+    }
+
+    // Check every 30-90 seconds for 'random' mode
     const interval = setInterval(() => {
       if (Math.random() > 0.7) { // 30% chance to appear when checked
         triggerDuck()
@@ -43,7 +48,7 @@ export function DuckBuddy() {
     }, 45000)
 
     return () => clearInterval(interval)
-  }, [sysSettings.duckMode, isVisible])
+  }, [sysSettings.duckMode, sysSettings.duckBehavior, isVisible])
 
   // Movement animation logic
   const animate = () => {
@@ -93,10 +98,13 @@ export function DuckBuddy() {
       document.removeEventListener("pointermove", onPointerMove)
       document.removeEventListener("pointerup", onPointerUp)
       
-      // Duck disappears after being caught and moved
+      // Duck disappears after being caught and moved, unless it is set to 'always'
       setTimeout(() => {
-        setIsVisible(false)
+        if (sysSettings.duckBehavior !== 'always') {
+           setIsVisible(false)
+        }
         setIsCaught(false)
+        setExpression("🦆")
       }, 500)
     }
 
